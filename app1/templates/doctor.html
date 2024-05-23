@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Doctors Dashboard</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'side/css/style.css' %}">
+    <!-- Favicons -->
+    <link href="{% static 'img/favicon.png' %}" rel="icon">
+    <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/animate.css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <style>
+      .patient-row,
+      .nurse-row {
+        display: none;
+      }
+
+        .edit-appointment-button,
+        .save-appointment-button {
+          margin-left: 25px;
+          background: orange;
+          color: #fff;
+          border: none;
+          border-radius: 4px;
+          padding: 8px 25px;
+          white-space: nowrap;
+          transition: 0.3s;
+          font-size: 14px;
+          display: inline-block;
+        }
+
+        .edit-appointment-button:hover,
+        .save-appointment-button:hover {
+          background: #ff8c00;
+          color: #fff;
+        }
+
+      .edit-input {
+        border: none; /* Remove border */
+        background-color: transparent; /* Set background color to transparent */
+        padding: 0; /* Remove padding */
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      tr:hover {
+        background-color: #f5f5f5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper d-flex align-items-stretch">
+      <nav id="sidebar">
+        <div class="p-4 pt-5">
+          <a href="#" class="img logo rounded-circle mb-5" style="background-image: url({{ doctor.image.url }});"></a>
+          <ul class="list-unstyled components mb-5">
+            <li class="active">
+              <a href="#appointments">Appointments</a>
+            </li>
+            <li>
+              <a href="#patients">Patients</a>
+            </li>
+            <li>
+              <a href="#">Schedule</a>
+            </li>
+            <li>
+              <a href="#nurses">Nurses</a>
+            </li>
+            <li>
+              <a href="{% url 'logout' %}">Logout</a>
+            </li>
+          </ul>
+          <div class="footer">
+            <p>
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+              Copyright &copy;
+              <script>
+                document.write(new Date().getFullYear());
+              </script>
+              All rights reserved |0.<i class="icon-heart" aria-hidden="true"></i><a href="https://colorlib.com" target="_blank">Medicio Hospital</a>
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </p>
+          </div>
+        </div>
+      </nav>
+      <!-- Page Content  -->
+      <div id="content" class="p-4 p-md-5">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <button type="button" id="sidebarCollapse" class="btn btn-primary">
+              <i class="fa fa-bars"></i>
+              <span class="sr-only">Toggle Menu</span>
+            </button>
+            <button
+              class="btn btn-dark d-inline-block d-lg-none ml-auto"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <i class="fa fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="#appointments">Appointments</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#patients">Patients</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Schedule</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <section id="appointments">
+          <div class="appointment section-bg">
+            <div class="container">
+              <div class="section-title">
+                <h2>Appointments for Dr. {{ request.user.username }}</h2>
+                <p>Here's the following appointments details.</p>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Patient Name</th>
+                    <th>Appointment Time</th>
+                    <th>Appointment Date</th>
+                    <th>Nurse</th>
+                    <th>Note</th>
+                    <th></th>
+                  </tr>
+                </thead>
+
+          <!-- ... previous HTML code ... -->
+          <tbody>
+            {% for appointment in appointments %}
+            <tr data-appointment-id="{{ appointment.id }}">
+              <form method="post" action="{% url 'doctor' %}">
+                {% csrf_token %}
+                <td>
+                  <input type="hidden" name="appointment_id" value="{{ appointment.id }}">
+                  <input type="text" class="edit-input" name="patientName" value="{{ appointment.patient.name }}" >
+                </td>
+                <td>
+                  <input type="text" class="edit-input" name="appointTime" value="{{ appointment.appoint_time }}" >
+                </td>
+                <td>
+                  <input type="text" class="edit-input" name="appointDate" value="{{ appointment.appoint_date }}" >
+                </td>
+                <td>
+                  <input type="text" class="edit-input" name="nurseName" value="{{ appointment.nurse.name }}" >
+                </td>
+                <td>
+                  <input type="text" class="edit-input" name="request" value="{{ appointment.request }}" >
+                </td>
+                <td>
+                  <button class="edit-appointment-button">Edit</button>
+                  <button type="submit" class="save-appointment-button" style="display: none;">Save</button>
+                </td>
+              </form>
+            </tr>
+            {% endfor %}
+          </tbody>
+
+
+
+              </table>
+            </div>
+          </div>
+        </section>
+        <section id="patients">
+          <div class="appointment section-bg">
+            <div class="container">
+              <div class="section-title">
+                <h2>Patients</h2>
+                <p>Here's the patients' information.</p>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Patient Name</th>
+                    <th>Date of Birth</th>
+                    <th>Appointment Time</th>
+                    <th>Appointment Date</th>
+                    <th>Nurse</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Note</th>
+                    <!-- Add more columns as needed -->
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for appointment in appointments %}
+                  <tr>
+                    <td>{{ appointment.patient.name }}</td>
+                    <td>{{ appointment.patient.dob }}</td>
+                    <td>{{ appointment.appoint_time }}</td>
+                    <td>{{ appointment.appoint_date }}</td>
+                    <td>{{ appointment.nurse.name }}</td>
+                    <td>{{ appointment.patient.phone }}</td>
+                    <td>{{ appointment.patient.email }}</td>
+                    <td>{{ appointment.request }}</td>
+                    <!-- Add more columns as needed -->
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <section id="nurses">
+          <div class="appointment section-bg">
+            <div class="container">
+              <div class="section-title">
+                <h2>Nurses</h2>
+                <p>Here are all the nurses in Medicio Hospital.</p>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nurse Name</th>
+                    <th>Phone Number</th>
+                    <!-- Add more columns as needed -->
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for nurse in nurses %}
+                  <tr>
+                    <td>{{ nurse.name }}</td>
+                    <td>{{ nurse.phone }}</td>
+                    <!-- Add more columns as needed -->
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <!-- Vendor JS Files -->
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'vendor/aos/aos.js' %}"></script>
+    <script src="{% static 'vendor/php-email-form/validate.js' %}"></script>
+    <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+    <script src="{% static 'vendor/purecounter/purecounter.js' %}"></script>
+    <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+    <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+    <script src="{% static 'side/js/jquery.min.js' %}"></script>
+    <script src="{% static 'side/js/popper.js' %}"></script>
+    <script src="{% static 'side/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'side/js/main.js' %}"></script>
+    <!-- Template Main JS File -->
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+  const appointmentSection = document.getElementById('appointments');
+  const patientsSection = document.getElementById('patients');
+  const nursesSection = document.getElementById('nurses');
+  const appointmentButton = document.querySelector('a[href="#appointments"]');
+  const patientsButton = document.querySelector('a[href="#patients"]');
+  const nursesButton = document.querySelector('a[href="#nurses"]');
+  const appointmentRows = document.querySelectorAll('tr[data-appointment-id]');
+
+  // Show Appointments section by default
+  appointmentSection.style.display = 'block';
+  patientsSection.style.display = 'none';
+  nursesSection.style.display = 'none';
+
+  appointmentButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    showSection(appointmentSection);
+  });
+
+  patientsButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    showSection(patientsSection);
+  });
+
+  nursesButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    showSection(nursesSection);
+  });
+
+  appointmentRows.forEach(function(row) {
+    const form = row.querySelector('form'); // Get the form element
+    const editButton = row.querySelector('.edit-appointment-button');
+    const saveButton = row.querySelector('.save-appointment-button');
+    const inputFields = row.querySelectorAll('.edit-input');
+
+    // Disable input fields initially
+    inputFields.forEach(function(inputField) {
+      inputField.disabled = true;
+    });
+
+    editButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      enableEditing(inputFields, saveButton, editButton);
+    });
+
+    saveButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      disableEditing(inputFields, saveButton, editButton);
+      form.submit();
+    });
+  });
+
+  function showSection(section) {
+    appointmentSection.style.display = 'none';
+    patientsSection.style.display = 'none';
+    nursesSection.style.display = 'none';
+    section.style.display = 'block';
+  }
+
+  function enableEditing(inputFields, saveButton, editButton) {
+    inputFields.forEach(function(inputField) {
+      inputField.disabled = false;
+    });
+    saveButton.style.display = 'inline-block';
+    editButton.style.display = 'none';
+  }
+
+  function disableEditing(inputFields, saveButton, editButton) {
+    inputFields.forEach(function(inputField) {
+      inputField.disabled = true;
+    });
+    saveButton.style.display = 'none';
+    editButton.style.display = 'inline-block';
+  }
+});
+
+
+
+    </script>
+  </body>
+</html>

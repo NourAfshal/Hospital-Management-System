@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Nurses Dashboard</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'img/favicon.png' %}" rel="icon">
+  <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/animate.css/animate.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File --><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="{% static 'sidebar/css/style.css' %}">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="wrapper d-flex align-items-stretch">
+			<nav id="sidebar" class="active">
+				<div class="custom-menu">
+					<button type="button" id="sidebarCollapse" class="btn btn-primary">
+	          <i class="fa fa-bars"></i>
+	          <span class="sr-only">Toggle Menu</span>
+	        </button>
+        </div>
+				<div class="p-4">
+		  		<h1><a href="{% url 'nurse' %}" class="logo">Medicio</a></h1>
+	        <ul class="list-unstyled components mb-5">
+	          <li class="active">
+	            <a href="{% url 'home' %}"><span class="fa fa-home mr-3"></span> Home</a>
+	          </li>
+	          <li>
+	              <a href="#appointment"><span class="fa fa-user mr-3"></span> Appointment</a>
+	          </li>
+	          <li>
+              <a href="#doctor"><span class="fa fa-briefcase mr-3"></span> Doctors</a>
+	          </li>
+	          <li>
+              <a href="#"><span class="fa fa-sticky-note mr-3"></span> Schedule</a>
+	          </li>
+	          <li>
+              <a href="{% url 'logout' %}"><span class="fa fa-paper-plane mr-3"></span> Logout</a>
+	          </li>
+	        </ul>
+
+		</div>
+	        <div class="footer">
+	        	<p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+						  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved |<i class="icon-heart" aria-hidden="true"></i><a href="{% url 'home' %}" target="_blank"> Medicio</a> Hospital
+						  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+	        </div>
+
+    	</nav>
+    <div id="content" class="p-4 p-md-5">
+
+    <section  id="appointment" >
+        <div class="appointment section-bg">
+    <div class="container">
+      <div class="section-title">
+        <h2>Appointments for Nurse {{ request.user.username }}</h2>
+        <p>Here's the following appointments details.</p>
+      </div>
+
+
+    <table>
+      <thead>
+        <tr>
+          <th>Patient Name</th>
+          <th>Appointment Time</th>
+          <th>Appointment Date</th>
+          <th>Doctor</th>
+          <th>Patient Email</th>
+          <th>Doctor Email</th>
+          <th>Note</th>
+            <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appointment in appointments %}
+        <tr data-appointment-id="{{ appointment.id }}">
+          <td>{{ appointment.patient.name }}</td>
+          <td>{{ appointment.appoint_time }}</td>
+          <td>{{ appointment.appoint_date }}</td>
+          <td>{{ appointment.doctor.name }}</td>
+          <td>{{ appointment.patient.email }}</td>
+          <td>{{ appointment.doctor.email }}</td>
+          <td>{{ appointment.request }}</td>
+          <td><button onclick="deleteAppointment(this)" data-csrf-token="{{ csrf_token }}">Delete</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+          </div>
+
+        </div>
+        </section>
+
+        <section  id="doctor" >
+        <div class="appointment section-bg">
+    <div class="container">
+      <div class="section-title">
+        <h2>Doctors</h2>
+        <p>Here's the following doctors in the hospital.</p>
+      </div>
+
+
+    <table>
+      <thead>
+        <tr>
+          <th>Doctor Name</th>
+          <th>Speciality</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+          <!-- Add more columns as needed -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for doctor in doctors %}
+        <tr>
+          <td>{{ doctor.name }}</td>
+          <td>{{ doctor.speciality }}</td>
+          <td>{{ doctor.email }}</td>
+          <td>{{ doctor.phone }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+          </div>
+
+        </div>
+        </section>
+
+
+
+        </div>
+ </div>
+
+
+    <script src="{% static 'sidebar/js/jquery.min.js' %}"></script>
+    <script src="{% static 'sidebar/js/popper.js' %}"></script>
+    <script src="{% static 'sidebar/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'sidebar/js/main.js' %}"></script>
+ <!-- Vendor JS Files -->
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'js/main.js' %}"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const appointmentSection = document.getElementById('appointment');
+    const doctorSection = document.getElementById('doctor');
+
+    const appointmentButton = document.querySelector('a[href="#appointment"]');
+    const doctorButton = document.querySelector('a[href="#doctor"]');
+
+    appointmentSection.style.display = 'block';
+    doctorSection.style.display = 'none';
+
+    appointmentButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      appointmentSection.style.display = 'block';
+      doctorSection.style.display = 'none';
+    });
+
+    doctorButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      appointmentSection.style.display = 'none';
+      doctorSection.style.display = 'block';
+    });
+  });
+
+function deleteAppointment(button) {
+  const appointmentId = button.parentNode.parentNode.getAttribute('data-appointment-id');
+  const csrfToken = button.getAttribute('data-csrf-token');
+
+  // Make an AJAX request to delete the appointment
+  fetch(`/delete-appointment/${appointmentId}`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrfToken,
+    },
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Appointment successfully deleted, reload the page
+        location.reload();
+      } else {
+        // Handle the error or display a message to the user
+        console.error(`Failed to delete appointment with ID ${appointmentId}.`);
+      }
+    })
+    .catch(error => {
+      console.error(`An error occurred while deleting the appointment: ${error}`);
+    });
+}
+
+
+
+</script>
+
+
+
+</body>
+
+</html>

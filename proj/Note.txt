@@ -1,0 +1,22 @@
+Should add this code 
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'app1', 'static'),
+]
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+MAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'code'
+EMAIL_FROM = 'code'
+EMAIL_HOST_USER = 'code'
+EMAIL_HOST_PASSWORD = 'code'
+EMAIL_PORT = 000
+EMAIL_USE_TLS = True
+
+LOGOUT_REDIRECT_URL = 'home' 
+
+at the end of settings.py

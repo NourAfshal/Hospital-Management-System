@@ -1,0 +1,135 @@
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Nurse Registration Page</title>
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js" defer></script>
+  <style>
+    .card {
+      padding: 30px 40px;
+      margin-top: 60px;
+      margin-bottom: 60px;
+      border: none !important;
+      box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2)
+    }
+
+    .blue-text {
+      color: #00BCD4
+    }
+
+    .form-control-label {
+      margin-bottom: 0
+    }
+
+    input,
+    textarea,
+    button {
+      padding: 8px 15px;
+      border-radius: 5px !important;
+      margin: 5px 0px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      font-size: 18px !important;
+      font-weight: 300
+    }
+
+    input:focus,
+    textarea:focus {
+      -moz-box-shadow: none !important;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+      border: 1px solid #00BCD4;
+      outline-width: 0;
+      font-weight: 400
+    }
+
+    .btn-block {
+      text-transform: uppercase;
+      font-size: 15px !important;
+      font-weight: 400;
+      height: 43px;
+      cursor: pointer
+    }
+
+    .btn-block:hover {
+      color: #fff !important
+    }
+
+    button:focus {
+      -moz-box-shadow: none !important;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+      outline-width: 0
+    }
+  </style>
+  <script>
+    function validateForm() {
+      var password = document.getElementById("password").value;
+      var confirmPassword = document.getElementById("cpassword").value;
+      var errorElement = document.getElementById("error-message");
+
+      if (password !== confirmPassword) {
+        errorElement.innerHTML = "Passwords do not match";
+        return false;
+      }
+
+      return true;
+    }
+  </script>
+</head>
+
+<body>
+  <form class="form-card" method="post" onsubmit="return validateForm()">
+    {% csrf_token %}
+    <div class="container-fluid px-1 py-5 mx-auto">
+      <div class="row d-flex justify-content-center">
+        <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+          <h3>Nurse Registration</h3>
+          <div class="card">
+            <div class="row justify-content-between text-left">
+              <div class="form-group col-sm-6 flex-column d-flex">
+                <label class="form-control-label px-3">Full name<span class="text-danger"> *</span></label>
+                <input required type="text" id="name" name="name" placeholder="Enter your full name">
+              </div>
+
+              <div class="form-group col-sm-6 flex-column d-flex">
+                <label class="form-control-label px-3">Phone number<span class="text-danger"> *</span></label>
+                <input type="tel" id="mobile" name="mobile" placeholder="" required>
+              </div>
+            </div>
+            <div class="row justify-content-between text-left">
+              <div class="form-group col-12 flex-column d-flex">
+                <label class="form-control-label px-3">Password<span class="text-danger"> *</span></label>
+                <input required type="password" id="password" name="password">
+              </div>
+            </div>
+            <div class="row justify-content-between text-left">
+              <div class="form-group col-12 flex-column d-flex">
+                <label class="form-control-label px-3">Confirm Password<span class="text-danger"> *</span></label>
+                <input required type="password" id="cpassword" name="cpassword">
+                <div id="error-message" class="text-danger"></div>
+                </div>
+            </div>
+
+            <div class="row justify-content-between text-left">
+              <div class="form-group col-sm-6">
+                <button type="submit" class="btn-block btn-primary">Send</button>
+              </div>
+            </div>
+            <p class="social-text">Already have an account? Login <a href="{% url 'login' %}">Here</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</body>
+
+</html>
